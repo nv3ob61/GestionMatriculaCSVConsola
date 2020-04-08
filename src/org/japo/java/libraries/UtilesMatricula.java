@@ -17,6 +17,7 @@
  */
 package org.japo.java.libraries;
 
+import java.text.ParseException;
 import java.util.Date;
 import org.japo.java.entities.Matricula;
 import org.japo.java.enumerations.EstadoAlumn;
@@ -146,5 +147,17 @@ public class UtilesMatricula {
     return estado.equals(EstadoAlumn.ACTIVO)
             || estado.equals(EstadoAlumn.BAJA)
             || estado.equals(EstadoAlumn.EN_TRAMITE);
+  }
+  
+    
+  public static final boolean validarRangoAdmision(Date d) throws ParseException{
+    boolean isOk = false;
+    if(d != null){
+      if (d.after(UtilesFecha.fechaMin())
+              && d.before(UtilesFecha.fechaMin())) {
+        isOk = true;
+      }
+    }
+    return isOk;
   }
 }

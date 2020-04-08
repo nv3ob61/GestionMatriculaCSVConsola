@@ -17,6 +17,7 @@
  */
 package org.japo.java.entities;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
@@ -122,7 +123,7 @@ public final class Matricula implements Comparable<Matricula> {
           String dni, Date fechaNac,
           String domicilio, String cp, String localidad,
           String telefono, String email,
-          String tutor, EstadoAlumn estado) {
+          String tutor, EstadoAlumn estado) throws ParseException {
 //    validar NIA
     if (UtilesValidacion.validar(nia, REG_NIA)) {
       this.nia = nia;
@@ -152,7 +153,11 @@ public final class Matricula implements Comparable<Matricula> {
     }
 
     //validar fechaNac
-    this.fechaNac = fechaNac;
+    if (UtilesMatricula.validarRangoAdmision(fechaNac)) {
+      this.fechaNac = fechaNac;
+    } else {
+      this.fechaNac = DEF_FECHA_NAC;
+    }
 
     //validar domicilio
     if (UtilesValidacion.validar(domicilio, REG_DOMI)) {
@@ -352,7 +357,7 @@ public final class Matricula implements Comparable<Matricula> {
     return getNia().compareTo(o.getNia());
   }
 
-  public int compareFechas(Date d){
+  public int compareFechas(Date d) {
     return getFechaNac().compareTo(d);
-  }  
+  }
 }

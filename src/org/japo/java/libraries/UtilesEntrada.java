@@ -17,6 +17,9 @@
  */
 package org.japo.java.libraries;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -222,5 +225,21 @@ public final class UtilesEntrada {
     } while (!isOk);
     // Devolución Confirmación
     return confirmacionOK;
+  }
+  
+  
+  public static final Date leerFecha(String msgUsr) {
+    boolean isOk = false;
+    Date fecha = null;
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    do {
+      try {
+        fecha = sdf.parse(UtilesEntrada.leerTexto(msgUsr));
+        isOk = true;
+      } catch (ParseException parseException) {
+        System.out.println("ERROR: Fecha introducida incorrecta");
+      }
+    } while (!isOk);
+    return fecha;
   }
 }

@@ -30,6 +30,11 @@ import java.util.Date;
  */
 public class UtilesFecha {
 
+  public static final SimpleDateFormat SDF = new SimpleDateFormat("dd/MM/yyyy");
+
+  public static final String DEF_FECHA_MIN = "01/01/1920";
+  public static final String DEF_FECHA_MAX = "31/12/2100";
+
   // ExpReg - Día del mes hasta 28 - [1..28] / [01..28]
   public static final String ER_DIA28 = "(0?[1-9]|1[0-9]|2[0-8])";
 
@@ -37,8 +42,8 @@ public class UtilesFecha {
   public static final String ER_MES = "(0?[1-9]|1[0-2])";
 
   // ExpReg - Año - [0..9999]
-  public static final String ER_ANY = 
-          "([0-9]|[1-9][0-9]|[1-9][0-9]{2}|[1-9][0-9]{3})";
+  public static final String ER_ANY
+          = "([0-9]|[1-9][0-9]|[1-9][0-9]{2}|[1-9][0-9]{3})";
 
   // ExpReg - Separador de campos de fecha: "/" o "-"
   public static final String ER_SEP_FECHA = "[/-]";
@@ -53,7 +58,7 @@ public class UtilesFecha {
 
   // ExpReg - Años NO divisibles por 100 pero SI divisibles por 4 (Hasta 4 dígitos)
   public static final String ER_ANYS_MOD4_NO100
-          = "(" + "[0-9]{0,2}" + "((0?|[2468])[48]|[13579][26]|[2468]0)" + ")";   
+          = "(" + "[0-9]{0,2}" + "((0?|[2468])[48]|[13579][26]|[2468]0)" + ")";
   // Desde 4 hasta 96
 
   // ExpReg - Años Bisiestos (Hasta 4 digitos)
@@ -62,7 +67,7 @@ public class UtilesFecha {
 
   // ExpReg - Fecha válida para 29 de Febreros BISIESTOS
   public static final String ER_FECHA_DIA29_BISIESTO
-          = "(" + "29" + ER_SEP_FECHA + "(2|02)" 
+          = "(" + "29" + ER_SEP_FECHA + "(2|02)"
           + ER_SEP_FECHA + ER_ANYS_BISIESTOS + ")";
 
   // ExpReg - Meses que tienen 30 dias (Todos menos Febrero)
@@ -70,7 +75,7 @@ public class UtilesFecha {
 
   // ExpReg - Fecha válida para el 29 de cualquier Mes EXCEPTO Febrero
   public static final String ER_FECHA_DIA29_NORMAL
-          = "(" + "29" + ER_SEP_FECHA + ER_MESES_30DIAS 
+          = "(" + "29" + ER_SEP_FECHA + ER_MESES_30DIAS
           + ER_SEP_FECHA + ER_ANY + ")";
 
   // ExpReg - Fecha válida para el 29 de cualquier Mes INCLUIDO Febrero
@@ -79,7 +84,7 @@ public class UtilesFecha {
 
   // ExpReg - Fecha válida para el 30 de cualquier Mes
   public static final String ER_FECHA_DIA30
-          = "(" + "30" + ER_SEP_FECHA + ER_MESES_30DIAS 
+          = "(" + "30" + ER_SEP_FECHA + ER_MESES_30DIAS
           + ER_SEP_FECHA + ER_ANY + ")";
 
   // ExpReg - Meses que tienen 31 dias
@@ -87,17 +92,17 @@ public class UtilesFecha {
 
   // ExpReg - Fecha válida para el 31 de cualquier Mes 
   public static final String ER_FECHA_DIA31
-          = "(" + "31" + ER_SEP_FECHA + ER_MESES_31DIAS 
+          = "(" + "31" + ER_SEP_FECHA + ER_MESES_31DIAS
           + ER_SEP_FECHA + ER_ANY + ")";
 
   // ExpReg - Fecha válida (Cualquiera)
   public static final String ER_FECHA
-          = "(" + ER_FECHA_DIA28 + "|" + ER_FECHA_DIA29 
+          = "(" + ER_FECHA_DIA28 + "|" + ER_FECHA_DIA29
           + "|" + ER_FECHA_DIA30 + "|" + ER_FECHA_DIA31 + ")";
   public static final String REG_FECHA
           = "^([0]?[1-9]|[1|2][0-9]|[3][0|1])/([0]?[1-9]|"
           + "[1][0-2])/([0-9]{4}|[0-9]{2})$";
-  
+
   public static final int EDAD_MIN = 18;
 
 //creamos un método similar al anterior con la entrada de un array.
@@ -141,7 +146,7 @@ public class UtilesFecha {
     return anytest % 400 == 0 || anytest % 100 != 0 && anytest % 4 == 0;
   }
 
-  public static final boolean validarRegistroEdad(String pideFecha) 
+  public static final boolean validarRegistroEdad(String pideFecha)
           throws ParseException {
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     Date instant = Calendar.getInstance().getTime();  //Coge referencia del momnt
@@ -182,33 +187,14 @@ public class UtilesFecha {
     return isOk;
   }
 
-  public static final Date validaFechaMin() {
-    boolean isOk = false;
-    Date fechaMin = null;
-    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-    do {
-      try {
-        fechaMin = sdf.parse(UtilesEntrada.leerTexto("Fecha mínima ....: "));
-        isOk = true;
-      } catch (ParseException parseException) {
-        System.out.println("ERROR: Fecha introducida incorrecta");
-      }
-    } while (!isOk);
-    return fechaMin;
+  public static final Date fechaMin() throws ParseException {
+    Date d = SDF.parse(DEF_FECHA_MIN);
+    return d;
   }
 
-  public static final Date validaFechaMax() {
-    boolean isOk = false;
-    Date fechaMax = null;
-    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-    do {
-      try {
-        fechaMax = sdf.parse(UtilesEntrada.leerTexto("Fecha máxima ....: "));
-        isOk = true;
-      } catch (ParseException parseException) {
-        System.out.println("ERROR: Fecha introducida incorrecta");
-      }
-    } while (!isOk);
-    return fechaMax;
+  public static final Date fechaMax() throws ParseException {
+    Date d = SDF.parse(DEF_FECHA_MAX);
+    return d;
   }
+
 }

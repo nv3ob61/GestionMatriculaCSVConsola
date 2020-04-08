@@ -89,6 +89,9 @@ public final class App {
 
   // Lógica de la Aplicación
   public final void launchApp() throws ParseException {
+    
+    System.out.println(UtilesFecha.DEF_FECHA_MIN);
+    System.out.println(UtilesFecha.DEF_FECHA_MAX);
     // Menú Principal
     importarDatosRdux();  //muestra log solo si algo falla, aparentemente.
     procesarMenuPpal();
@@ -992,7 +995,7 @@ public final class App {
   // Lista > Ordenada por NIA
   private void ordenarAlumnos(Criterio criOrd) {
     // Ordenación > Desactivación Filtro
-    desactivarFiltro(false);
+    desactivarFiltro();
 
     // Registra Criterio Ordenación
     this.criOrd = criOrd;
@@ -1151,8 +1154,8 @@ public final class App {
     criFil = Criterio.FECHA_NAC;
 
     // Establecer Rango
-    Date fechaMin = UtilesFecha.validaFechaMin();
-    Date fechaMax = UtilesFecha.validaFechaMax();
+    Date fechaMin = UtilesEntrada.leerFecha("Fecha mínima ....: ");
+    Date fechaMax = UtilesEntrada.leerFecha("Fecha máxima ....: ");
 
     FILTRO.clear();
 
