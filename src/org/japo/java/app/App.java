@@ -89,9 +89,7 @@ public final class App {
 
   // Lógica de la Aplicación
   public final void launchApp() throws ParseException {
-    
-    System.out.println(UtilesFecha.DEF_FECHA_MIN);
-    System.out.println(UtilesFecha.DEF_FECHA_MAX);
+
     // Menú Principal
     importarDatosRdux();  //muestra log solo si algo falla, aparentemente.
     procesarMenuPpal();
@@ -1355,7 +1353,7 @@ public final class App {
       // Mensaje Informativo
       UtilesEntrada.hacerPausa("ERROR: Formato de datos incorrecto");
 
-      // Vaciado Carrito
+      // Vaciado lista
       ALUMLIST.clear();
     } catch (IOException e) {
       // Mensaje Informativo
@@ -1447,7 +1445,7 @@ public final class App {
       // Mensaje Informativo
       UtilesEntrada.hacerPausa("ERROR: Formato de datos incorrecto");
 
-      // Vaciado Carrito
+      // Vaciado lista
       ALUMLIST.clear();
     } catch (IOException e) {
       // Mensaje Informativo

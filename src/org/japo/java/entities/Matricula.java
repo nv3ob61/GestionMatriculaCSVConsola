@@ -153,11 +153,11 @@ public final class Matricula implements Comparable<Matricula> {
     }
 
     //validar fechaNac
-    if (UtilesMatricula.validarRangoAdmision(fechaNac)) {
+//    if (UtilesMatricula.validarRangoAdmision(fechaNac)) {
       this.fechaNac = fechaNac;
-    } else {
-      this.fechaNac = DEF_FECHA_NAC;
-    }
+//    } else {
+//      this.fechaNac = DEF_FECHA_NAC;
+//    }
 
     //validar domicilio
     if (UtilesValidacion.validar(domicilio, REG_DOMI)) {
