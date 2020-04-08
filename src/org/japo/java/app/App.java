@@ -269,6 +269,11 @@ public final class App {
           activarFiltroBaja();
           salirOK = true;
           break;
+        case 8:
+          criFil = Criterio.EN_TRAMITE;
+          activarFiltroEnTramite();
+          salirOK = true;
+          break;
         case 0:
           salirOK = true;
           break;
@@ -524,55 +529,58 @@ public final class App {
     // Cabecera
     System.out.println("Borrado de Matricula");
     System.out.println("====================");
+    if (!ALUMLIST.isEmpty()) {
+      // Consola > Clave
+      String nia = UtilesEntrada.leerTexto("NIA .....: ");
 
-    // Consola > Clave
-    String nia = UtilesEntrada.leerTexto("NIA .....: ");
+      // Comparador de Búsqueda
+      Comparator<Matricula> cmp = new ComparadorMatricula(Criterio.NIA);
 
-    // Comparador de Búsqueda
-    Comparator<Matricula> cmp = new ComparadorMatricula(Criterio.NIA);
+      // Ordenacion
+      Collections.sort(ALUMLIST, cmp);
 
-    // Ordenacion
-    Collections.sort(ALUMLIST, cmp);
+      // Clave de Busqueda
+      Matricula clave
+              = new Matricula(nia, null, null,
+                      Matricula.DEF_DNI, null, null, null, null,
+                      null, null, null); // Localización
 
-    // Clave de Busqueda
-    Matricula clave
-            = new Matricula(nia, null, null,
-                    Matricula.DEF_DNI, null, null, null, null,
-                    null, null, null); // Localización
+      int posicion = Collections.binarySearch(ALUMLIST, clave, cmp);
 
-    int posicion = Collections.binarySearch(ALUMLIST, clave, cmp);
-
-    if (posicion < 0) {
-      UtilesEntrada.hacerPausa("ERROR: Matrícula NO encontrada");
-    } else {
-      // Obtiene Matricula
-      Matricula m = ALUMLIST.get(posicion);
-      //comprbación que la matrícula no es BAJA, se pueden eliminar EN_TRAMITE too
-
-      // Separador
-      System.out.println("---");
-
-      // Muestra Datos
-      System.out.println("Matricula Seleccionada");
-      System.out.println("-----------------");
-      m.mostrarMatricula();
-      // Separador
-      System.out.println("---");
-
-      // Confirmar Proceso
-      if (UtilesEntrada.confirmarProceso(
-              "Confirmar Borrado (s/N) ...: ", false)) {
-        // Eliminación Ítem
-        ALUMLIST.remove(posicion);
-
-        // Mensaje Informacivo
-        UtilesEntrada.hacerPausa("Matrícula BORRADA correctamente");
+      if (posicion < 0) {
+        UtilesEntrada.hacerPausa("ERROR: Matrícula NO encontrada");
       } else {
-        // Mensaje Informacivo
-        UtilesEntrada.hacerPausa("Borrado de matrícula CANCELADA");
+        // Obtiene Matricula
+        Matricula m = ALUMLIST.get(posicion);
+        //comprbación que la matrícula no es BAJA, se pueden eliminar EN_TRAMITE too
+
+        // Separador
+        System.out.println("---");
+
+        // Muestra Datos
+        System.out.println("Matricula Seleccionada");
+        System.out.println("-----------------");
+        m.mostrarMatricula();
+        // Separador
+        System.out.println("---");
+
+        // Confirmar Proceso
+        if (UtilesEntrada.confirmarProceso(
+                "Confirmar Borrado (s/N) ...: ", false)) {
+          // Eliminación Ítem
+          ALUMLIST.remove(posicion);
+
+          // Mensaje Informacivo
+          UtilesEntrada.hacerPausa("Matrícula BORRADA correctamente");
+        } else {
+          // Mensaje Informacivo
+          UtilesEntrada.hacerPausa("Borrado de matrícula CANCELADA");
+        }
       }
+      desactivarFiltro();
+    } else {
+      System.out.printf("%nERROR: La lista de alumnos está VACÍA.");
     }
-    desactivarFiltro();
   }
 
   // Colección > Matricula
@@ -580,38 +588,42 @@ public final class App {
     // Cabecera
     System.out.println("Consulta Matrícula por NIA");
     System.out.println("==========================");
+    if (!ALUMLIST.isEmpty()) {
 
-    // Consola > Clave
-    String nia = UtilesEntrada.leerTexto(
-            "NIA .....: ");
+      // Consola > Clave
+      String nia = UtilesEntrada.leerTexto(
+              "NIA .....: ");
 
-    // Comparador de Búsqueda
-    Comparator<Matricula> cmp = new ComparadorMatricula(Criterio.NIA);
+      // Comparador de Búsqueda
+      Comparator<Matricula> cmp = new ComparadorMatricula(Criterio.NIA);
 
-    // Ordenacion
-    Collections.sort(ALUMLIST, cmp);
+      // Ordenacion
+      Collections.sort(ALUMLIST, cmp);
 
-    // Clave de Busqueda
-    Matricula clave = new Matricula(nia, null, null, null,
-            null, null, null, null, null, null, null);
+      // Clave de Busqueda
+      Matricula clave = new Matricula(nia, null, null, null,
+              null, null, null, null, null, null, null);
 
-    // Localización
-    int posicion = Collections.binarySearch(ALUMLIST, clave, cmp);
+      // Localización
+      int posicion = Collections.binarySearch(ALUMLIST, clave, cmp);
 
-    if (posicion < 0) {
-      UtilesEntrada.hacerPausa("ERROR: Ítem NO encontrado");
+      if (posicion < 0) {
+        UtilesEntrada.hacerPausa("ERROR: Ítem NO encontrado");
+      } else {
+        // Obtiene Matricula
+        Matricula m = ALUMLIST.get(posicion);
+
+        // Separador
+        System.out.println("---");
+
+        // Muestra Datos
+        m.mostrarMatricula();
+
+        // Mensaje Informacivo
+        UtilesEntrada.hacerPausa();
+      }
     } else {
-      // Obtiene Matricula
-      Matricula m = ALUMLIST.get(posicion);
-
-      // Separador
-      System.out.println("---");
-
-      // Muestra Datos
-      m.mostrarMatricula();
-
-      // Mensaje Informacivo
-      UtilesEntrada.hacerPausa();
+      System.out.printf("%nERROR: La lista de alumnos está VACÍA.");
     }
   }
 
@@ -632,305 +644,320 @@ public final class App {
     int posicion;
     Date d = null;
 
-    // Cabecera
-    System.out.println("Modificación de Matricula");
-    System.out.println("=========================");
+    if (!ALUMLIST.isEmpty()) {
 
-    // Consola > Clave
-    nia = UtilesEntrada.leerTexto("NIA .....: ");
+      // Cabecera
+      System.out.println("Modificación de Matricula");
+      System.out.println("=========================");
 
-    // Comparador de Búsqueda
-    Comparator<Matricula> cmp = new ComparadorMatricula(Criterio.NIA);
+      // Consola > Clave
+      nia = UtilesEntrada.leerTexto("NIA .....: ");
 
-    // Ordenacion
-    Collections.sort(ALUMLIST, cmp);
+      // Comparador de Búsqueda
+      Comparator<Matricula> cmp = new ComparadorMatricula(Criterio.NIA);
 
-    // Clave de Busqueda
-    Matricula clave = new Matricula(nia, null, null, null,
-            null, null, null, null, null, null, null);
+      // Ordenacion
+      Collections.sort(ALUMLIST, cmp);
 
-    // Localización
-    posicion = Collections.binarySearch(ALUMLIST, clave, cmp);
+      // Clave de Busqueda
+      Matricula clave = new Matricula(nia, null, null, null,
+              null, null, null, null, null, null, null);
 
-    if (posicion < 0) {
-      UtilesEntrada.hacerPausa("ERROR: Ítem NO encontrado");
-    } else {
-      // Obtiene Matricula
-      Matricula m = ALUMLIST.get(posicion);
+      // Localización
+      posicion = Collections.binarySearch(ALUMLIST, clave, cmp);
+
+      if (posicion < 0) {
+        UtilesEntrada.hacerPausa("ERROR: Ítem NO encontrado");
+      } else {
+        // Obtiene Matricula
+        Matricula m = ALUMLIST.get(posicion);
 
 //      // Separador
 //      System.out.println("---");
-      // Muestra Datos
-      System.out.println("-----------------");
-      m.mostrarMatricula();
+        // Muestra Datos
+        System.out.println("-----------------");
+        m.mostrarMatricula();
 
-      // Separador
-      System.out.println("---");
-
-      // Confirmar Proceso
-      if (UtilesEntrada.confirmarProceso(
-              "Modificar matrícula (s/N) ...: ", false)) {
         // Separador
         System.out.println("---");
 
-        // Matrícula vacía
-        Matricula aux = new Matricula(
-                nia, null, null, Matricula.DEF_DNI,
-                null, null, null, null, null, null, null,
-                EstadoAlumn.EN_TRAMITE);
-
-        // Item Modificado
-        System.out.println("Matrícula Modificada");
-        System.out.println("--------------------");
-        // Consola > Nombre
-        do {
-          nombre = UtilesEntrada.leerTexto("   Nombre .........: ");
-          if (!nombre.isEmpty()) {
-            aux.setNombre(nombre);
-          } else {
-            aux.setNombre(m.getNombre());
-          }
-        } while (aux.getNombre().equals(Matricula.DEF_NOMBRE_ALUM));
-
-        // Consola > Apellido
-        do {
-          String ape = UtilesEntrada.leerTexto("   Apellidos ......: ");
-          if (!ape.isEmpty()) {
-            aux.setApellidos(ape);
-          } else {
-            aux.setApellidos(m.getApellidos());
-          }
-        } while (aux.getApellidos().equals(Matricula.DEF_APELLIDO_ALUM));
-
-        // Consola > DNI
-        do {
-          dni = UtilesDNI.obtener("   DNI ............: ");
-          if (dni.length() != 0) {
-            aux.setDni(dni);
-          } else {
-            aux.setDni(m.getDni());
-          }
-        } while (aux.getDni().equals(Matricula.DEF_DNI) && !dni.equals(""));
-
-        // Consola > FechaNac
-        do {
-          do { //bucle de entrada fecha
-            pideFecha = UtilesEntrada.leerTexto("   Fecha de Nac ...: ");
-            if (!pideFecha.isEmpty()) {
-              fechaOk = UtilesFecha.validarRegistroEdad(pideFecha);
-            } else {
-              aux.setFechaNac(m.getFechaNac());
-              fechaOk = true;  //sale porque acepta "" como condición.
-            }
-          } while (!fechaOk);
-          //si el String pideFecha no está vacío o es null..
-          if (!pideFecha.isEmpty()) {
-            d = SDF.parse(pideFecha); //parsea el string y comprueba la edad.
-            mayordeOk = UtilesFecha.esMayorde(d);
-            if (mayordeOk) {
-              aux.setFechaNac(d);
-            }
-          }
-        } while (!fechaOk);
-
-        //Si es mayor o igual que la edad necesaria para el alta pide resto datos.
-        if (mayordeOk) {
-          // Consola > Domicilio
-          do {
-            pideDomi = UtilesEntrada.leerTexto("   Domicilio ......: ");
-            if (!pideDomi.isEmpty()) {
-              aux.setDomicilio(pideDomi);
-            } else {
-              aux.setDomicilio(m.getDomicilio());
-            }
-          } while (aux.getDomicilio().equals(Matricula.DEF_DOMICILIO));
-
-          // Consola > Código Postal
-          do {
-            pideCp = UtilesEntrada.leerTexto("   Código Postal ..: ");
-            if (!pideCp.isEmpty()) {
-              aux.setCp(pideCp);
-            } else {
-              aux.setCp(m.getCp());
-            }
-          } while (aux.getCp().equals(Matricula.DEF_CP));
-
-          // Consola > Localidad
-          do {
-            pideLoc = UtilesEntrada.leerTexto("   Localidad ......: ");
-            if (!pideLoc.isEmpty()) {
-              aux.setLocalidad(pideLoc);
-            } else {
-              aux.setLocalidad(m.getLocalidad());
-            }
-          } while (aux.getLocalidad().equals(Matricula.DEF_LOCALIDAD));
-
-          // Consola > Teléfono
-          do {
-            pideTelf = UtilesEntrada.leerTexto("   Teléfono .......: ");
-            if (!pideTelf.isEmpty()) {
-              aux.setTelefono(pideTelf);
-            } else {
-              aux.setTelefono(m.getTelefono());
-            }
-          } while (aux.getTelefono().equals(Matricula.DEF_TELEFONO));
-
-          // Consola > Email
-          do {
-            pideEmail = UtilesEntrada.leerTexto("   Email ..........: ");
-            if (!pideEmail.isEmpty()) {
-              aux.setEmail(pideEmail);
-            } else {
-              aux.setEmail(m.getEmail());
-            }
-          } while (aux.getEmail().equals(Matricula.DEF_EMAIL)
-                  && !pideEmail.isEmpty());
-
-          // Consola > Tutor
-          do {
-            pideTutor = UtilesEntrada.leerTexto("   Tutor ..........: ");
-            if (!pideTutor.isEmpty()) {
-              aux.setTutor(pideTutor);
-            } else {
-              aux.setTutor(m.getTutor());
-            }
-          } while (aux.getTutor().equals(Matricula.DEF_TUTOR));
-          String estado;
-          do {
-            // Consola > EstadoAluauxno por defecto al crear la cuenta.
-            estado = UtilesEntrada.leerTexto("   Estado .........: ");
-            if (UtilesMatricula.validarEstado(
-                    UtilesMatricula.generarEstado(m, estado))) {
-              aux.setEstadoAlumn(UtilesMatricula.generarEstado(m, estado));
-            } else {
-              System.out.println("ERROR: Estado INCORRECTO");
-              System.out.println("---");
-            }
-          } while (!UtilesMatricula.validarEstado(
-                  UtilesMatricula.generarEstado(m, estado)));
-
-          System.out.println("------------------------------");
-          aux.mostrarMatricula();
+        // Confirmar Proceso
+        if (UtilesEntrada.confirmarProceso(
+                "Modificar matrícula (s/N) ...: ", false)) {
           // Separador
           System.out.println("---");
 
-          // Confirmar Sustitución
-          if (UtilesEntrada.confirmarProceso(
-                  "Guardar cambios (s/N) ...: ", false)) {
-            // Sustitución Item
-            ALUMLIST.set(posicion, aux);
+          // Matrícula vacía
+          Matricula aux = new Matricula(
+                  nia, null, null, Matricula.DEF_DNI,
+                  null, null, null, null, null, null, null,
+                  EstadoAlumn.EN_TRAMITE);
 
-            // Mensaje Informacivo
-            UtilesEntrada.hacerPausa("MAtrícula MODIFICADA correctamente");
+          // Item Modificado
+          System.out.println("Matrícula Modificada");
+          System.out.println("--------------------");
+          // Consola > Nombre
+          do {
+            nombre = UtilesEntrada.leerTexto("   Nombre .........: ");
+            if (!nombre.isEmpty()) {
+              aux.setNombre(nombre);
+            } else {
+              aux.setNombre(m.getNombre());
+            }
+          } while (aux.getNombre().equals(Matricula.DEF_NOMBRE_ALUM));
+
+          // Consola > Apellido
+          do {
+            String ape = UtilesEntrada.leerTexto("   Apellidos ......: ");
+            if (!ape.isEmpty()) {
+              aux.setApellidos(ape);
+            } else {
+              aux.setApellidos(m.getApellidos());
+            }
+          } while (aux.getApellidos().equals(Matricula.DEF_APELLIDO_ALUM));
+
+          // Consola > DNI
+          do {
+            dni = UtilesDNI.obtener("   DNI ............: ");
+            if (dni.length() != 0) {
+              aux.setDni(dni);
+            } else {
+              aux.setDni(m.getDni());
+            }
+          } while (aux.getDni().equals(Matricula.DEF_DNI) && !dni.equals(""));
+
+          // Consola > FechaNac
+          do {
+            do { //bucle de entrada fecha
+              pideFecha = UtilesEntrada.leerTexto("   Fecha de Nac ...: ");
+              if (!pideFecha.isEmpty()) {
+                fechaOk = UtilesFecha.validarRegistroEdad(pideFecha);
+              } else {
+                aux.setFechaNac(m.getFechaNac());
+                fechaOk = true;  //sale porque acepta "" como condición.
+              }
+            } while (!fechaOk);
+            //si el String pideFecha no está vacío o es null..
+            if (!pideFecha.isEmpty()) {
+              d = SDF.parse(pideFecha); //parsea el string y comprueba la edad.
+              mayordeOk = UtilesFecha.esMayorde(d);
+              if (mayordeOk) {
+                aux.setFechaNac(d);
+              }
+            }
+          } while (!fechaOk);
+
+          //Si es mayor o igual que la edad necesaria para el alta pide resto datos.
+          if (mayordeOk) {
+            // Consola > Domicilio
+            do {
+              pideDomi = UtilesEntrada.leerTexto("   Domicilio ......: ");
+              if (!pideDomi.isEmpty()) {
+                aux.setDomicilio(pideDomi);
+              } else {
+                aux.setDomicilio(m.getDomicilio());
+              }
+            } while (aux.getDomicilio().equals(Matricula.DEF_DOMICILIO));
+
+            // Consola > Código Postal
+            do {
+              pideCp = UtilesEntrada.leerTexto("   Código Postal ..: ");
+              if (!pideCp.isEmpty()) {
+                aux.setCp(pideCp);
+              } else {
+                aux.setCp(m.getCp());
+              }
+            } while (aux.getCp().equals(Matricula.DEF_CP));
+
+            // Consola > Localidad
+            do {
+              pideLoc = UtilesEntrada.leerTexto("   Localidad ......: ");
+              if (!pideLoc.isEmpty()) {
+                aux.setLocalidad(pideLoc);
+              } else {
+                aux.setLocalidad(m.getLocalidad());
+              }
+            } while (aux.getLocalidad().equals(Matricula.DEF_LOCALIDAD));
+
+            // Consola > Teléfono
+            do {
+              pideTelf = UtilesEntrada.leerTexto("   Teléfono .......: ");
+              if (!pideTelf.isEmpty()) {
+                aux.setTelefono(pideTelf);
+              } else {
+                aux.setTelefono(m.getTelefono());
+              }
+            } while (aux.getTelefono().equals(Matricula.DEF_TELEFONO));
+
+            // Consola > Email
+            do {
+              pideEmail = UtilesEntrada.leerTexto("   Email ..........: ");
+              if (!pideEmail.isEmpty()) {
+                aux.setEmail(pideEmail);
+              } else {
+                aux.setEmail(m.getEmail());
+              }
+            } while (aux.getEmail().equals(Matricula.DEF_EMAIL)
+                    && !pideEmail.isEmpty());
+
+            // Consola > Tutor
+            do {
+              pideTutor = UtilesEntrada.leerTexto("   Tutor ..........: ");
+              if (!pideTutor.isEmpty()) {
+                aux.setTutor(pideTutor);
+              } else {
+                aux.setTutor(m.getTutor());
+              }
+            } while (aux.getTutor().equals(Matricula.DEF_TUTOR));
+            String estado;
+            do {
+              // Consola > EstadoAluauxno por defecto al crear la cuenta.
+              estado = UtilesEntrada.leerTexto("   Estado .........: ");
+              if (UtilesMatricula.validarEstado(
+                      UtilesMatricula.generarEstado(m, estado))) {
+                aux.setEstadoAlumn(UtilesMatricula.generarEstado(m, estado));
+              } else {
+                System.out.println("ERROR: Estado INCORRECTO");
+                System.out.println("---");
+              }
+            } while (!UtilesMatricula.validarEstado(
+                    UtilesMatricula.generarEstado(m, estado)));
+
+            System.out.println("------------------------------");
+            aux.mostrarMatricula();
+            // Separador
+            System.out.println("---");
+
+            // Confirmar Sustitución
+            if (UtilesEntrada.confirmarProceso(
+                    "Guardar cambios (s/N) ...: ", false)) {
+              // Sustitución Item
+              ALUMLIST.set(posicion, aux);
+
+              // Mensaje Informacivo
+              UtilesEntrada.hacerPausa("MAtrícula MODIFICADA correctamente");
+            } else {
+              // Mensaje Informacivo
+              UtilesEntrada.hacerPausa("Modificación de Matrícula CANCELADA");
+            }
           } else {
             // Mensaje Informacivo
             UtilesEntrada.hacerPausa("Modificación de Matrícula CANCELADA");
           }
-        } else {
-          // Mensaje Informacivo
-          UtilesEntrada.hacerPausa("Modificación de Matrícula CANCELADA");
         }
       }
+    } else {
+      System.out.printf("%nERROR: La lista de alumnos está VACÍA.");
     }
   }
 
   private void habilitarAlumno() {
     String nia;
-    System.out.println("Habilitar ALUMNO de BAJA");
-    System.out.printf("========================%n%n");
 
-    // Registrar Filtro
-    criFil = Criterio.BAJA;
+    if (!ALUMLIST.isEmpty()) {
+      System.out.println("Habilitar ALUMNO de BAJA");
+      System.out.printf("========================%n%n");
 
-    // Vaciar Filtro
-    FILTRO.clear();
+      // Registrar Filtro
+      criFil = Criterio.BAJA;
 
-    // Muestra lista de matrículas estado BAJA
-    for (Matricula mat : ALUMLIST) {
-      if (mat.getEstadoAlumn().equals(EstadoAlumn.BAJA)) {
-        FILTRO.add(mat);
-        mat.mostrarMatricula();
-      }
-    }
-    do {
-      nia = UtilesEntrada.leerTexto("¿Qué NIA desea habilitar? "
-              + "(" + "\"exit\" para salir" + ")" + " ..: ");
+      // Vaciar Filtro
+      FILTRO.clear();
 
-      if (UtilesValidacion.validar(nia, Matricula.REG_NIA)) {
-        // Registrar Filtro
-        criFil = Criterio.NIA;
-
-        // Filtrado de Datos
-        for (Matricula mat : ALUMLIST) {
-          if (mat.getNia().equals(nia)
-                  && mat.getEstadoAlumn().equals(EstadoAlumn.BAJA)) {
-            mat.setEstadoAlumn(EstadoAlumn.ACTIVO);  //set ACTIVO
-            System.out.printf("%nALUMNO habilitado CORRECTAMENTE%n%n");
-          } else if (mat.getNia().equals(nia)
-                  && !mat.getEstadoAlumn().equals(EstadoAlumn.BAJA)) {
-            System.out.printf("%nERROR: Estado del alumno NO es baja.%n%n");
-          }
+      // Muestra lista de matrículas estado BAJA
+      for (Matricula mat : ALUMLIST) {
+        if (mat.getEstadoAlumn().equals(EstadoAlumn.BAJA)) {
+          FILTRO.add(mat);
+          mat.mostrarMatricula();
         }
-      } else if (nia.equalsIgnoreCase("exit")) {
-        //separador
-        System.out.println();
-      } else {
-        System.out.printf("%nERROR: NIA introducido NO válido%n---%n");
       }
-    } while (!UtilesValidacion.validar(nia, Matricula.REG_NIA)
-            && !nia.equals("exit"));
-    // Devuelve el filtro a ninguno
-    criFil = Criterio.NINGUNO;
+      do {
+        nia = UtilesEntrada.leerTexto("¿Qué NIA desea habilitar? "
+                + "(" + "\"exit\" para salir" + ")" + " ..: ");
+
+        if (UtilesValidacion.validar(nia, Matricula.REG_NIA)) {
+          // Registrar Filtro
+          criFil = Criterio.NIA;
+
+          // Filtrado de Datos
+          for (Matricula mat : ALUMLIST) {
+            if (mat.getNia().equals(nia)
+                    && mat.getEstadoAlumn().equals(EstadoAlumn.BAJA)) {
+              mat.setEstadoAlumn(EstadoAlumn.ACTIVO);  //set ACTIVO
+              System.out.printf("%nALUMNO habilitado CORRECTAMENTE%n%n");
+            } else if (mat.getNia().equals(nia)
+                    && !mat.getEstadoAlumn().equals(EstadoAlumn.BAJA)) {
+              System.out.printf("%nERROR: Estado del alumno NO es baja.%n%n");
+            }
+          }
+        } else if (nia.equalsIgnoreCase("exit")) {
+          //separador
+          System.out.println();
+        } else {
+          System.out.printf("%nERROR: NIA introducido NO válido%n---%n");
+        }
+      } while (!UtilesValidacion.validar(nia, Matricula.REG_NIA)
+              && !nia.equals("exit"));
+      // Devuelve el filtro a ninguno
+      criFil = Criterio.NINGUNO;
+    } else {
+      System.out.printf("%nERROR: La lista de alumnos está VACÍA.");
+    }
   }
 
   private void deshabilitarAlumno() {
     String nia;
-    System.out.println("Deshabilitar ALUMNO de ALTA");
-    System.out.println("===========================");
 
-    // Registrar Filtro
-    criFil = Criterio.ACTIVO;
+    if (!ALUMLIST.isEmpty()) {
+      System.out.println("Deshabilitar ALUMNO de ALTA");
+      System.out.println("===========================");
 
-    // Vaciar Filtro
-    FILTRO.clear();
+      // Registrar Filtro
+      criFil = Criterio.ACTIVO;
 
-    // Filtrado de Datos 
-    for (Matricula mat : ALUMLIST) {
-      if (mat.getEstadoAlumn().equals(EstadoAlumn.ACTIVO)) {
-        FILTRO.add(mat);
-        mat.mostrarMatricula();
-      }
-    }
-    do {
-      nia = UtilesEntrada.leerTexto("¿Qué NIA desea deshabilitar? "
-              + "(" + "\"exit\" para salir" + ")" + " ..: ");
+      // Vaciar Filtro
+      FILTRO.clear();
 
-      if (UtilesValidacion.validar(nia, Matricula.REG_NIA)) {
-        // Registrar Filtro
-        criFil = Criterio.NIA;
-
-        // Filtrado de Datos
-        for (Matricula mat : ALUMLIST) {
-          if (mat.getNia().equals(nia)
-                  && mat.getEstadoAlumn().equals(EstadoAlumn.BAJA)) {
-            mat.setEstadoAlumn(EstadoAlumn.BAJA);  //set BAJA
-            System.out.printf("%nALUMNO deshabilitado CORRECTAMENTE%n%n");
-          } else if (mat.getNia().equals(nia)
-                  && !mat.getEstadoAlumn().equals(EstadoAlumn.ACTIVO)) {
-            System.out.printf("%nERROR: Estado del alumno NO es ACTIVO.%n%n");
-          }
+      // Filtrado de Datos 
+      for (Matricula mat : ALUMLIST) {
+        if (mat.getEstadoAlumn().equals(EstadoAlumn.ACTIVO)) {
+          FILTRO.add(mat);
+          mat.mostrarMatricula();
         }
-      } else if (nia.equalsIgnoreCase("exit")) {
-        //separador
-        System.out.println();
-      } else {
-        System.out.printf("%nERROR: NIA introducido NO válido%n---%n");
       }
-    } while (!UtilesValidacion.validar(nia, Matricula.REG_NIA)
-            && !nia.equals("exit"));
+      do {
+        nia = UtilesEntrada.leerTexto("¿Qué NIA desea deshabilitar? "
+                + "(" + "\"exit\" para salir" + ")" + " ..: ");
 
-    // Devuelve el filtro a ninguno
-    criFil = Criterio.NINGUNO;
+        if (UtilesValidacion.validar(nia, Matricula.REG_NIA)) {
+          // Registrar Filtro
+          criFil = Criterio.NIA;
+
+          // Filtrado de Datos
+          for (Matricula mat : ALUMLIST) {
+            if (mat.getNia().equals(nia)
+                    && mat.getEstadoAlumn().equals(EstadoAlumn.BAJA)) {
+              mat.setEstadoAlumn(EstadoAlumn.BAJA);  //set BAJA
+              System.out.printf("%nALUMNO deshabilitado CORRECTAMENTE%n%n");
+            } else if (mat.getNia().equals(nia)
+                    && !mat.getEstadoAlumn().equals(EstadoAlumn.ACTIVO)) {
+              System.out.printf("%nERROR: Estado del alumno NO es ACTIVO.%n%n");
+            }
+          }
+        } else if (nia.equalsIgnoreCase("exit")) {
+          //separador
+          System.out.println();
+        } else {
+          System.out.printf("%nERROR: NIA introducido NO válido%n---%n");
+        }
+      } while (!UtilesValidacion.validar(nia, Matricula.REG_NIA)
+              && !nia.equals("exit"));
+
+      // Devuelve el filtro a ninguno
+      criFil = Criterio.NINGUNO;
+    } else {
+      System.out.printf("%nERROR: La lista de alumnos está VACÍA.");
+    }
   }
 
   // Lista > Listado Consola
@@ -939,19 +966,23 @@ public final class App {
     System.out.println("Listado de Alumnos");
     System.out.println("================");
 
-    // Criterio de Ordenación/Filtrado
-    System.out.printf("Criterio de Ordenación .: %S%n", criOrd.getNombre());
-    System.out.printf("Criterio de Filtrado ...: %S%n", criFil.getNombre());
+    if (!ALUMLIST.isEmpty()) {
+      // Criterio de Ordenación/Filtrado
+      System.out.printf("Criterio de Ordenación .: %S%n", criOrd.getNombre());
+      System.out.printf("Criterio de Filtrado ...: %S%n", criFil.getNombre());
 
-    // Separados
-    System.out.println("---");
+      // Separados
+      System.out.println("---");
 
-    // Filtrado > Selección Colección
-    List<Matricula> lista = criFil.equals(Criterio.NINGUNO) ? ALUMLIST : FILTRO;
+      // Filtrado > Selección Colección
+      List<Matricula> lista = criFil.equals(Criterio.NINGUNO) ? ALUMLIST : FILTRO;
 
-    // Recorrido Colección
-    for (Matricula mat : lista) {
-      mat.mostrarMatricula();
+      // Recorrido Colección
+      for (Matricula mat : lista) {
+        mat.mostrarMatricula();
+      }
+    } else {
+      System.out.printf("%nERROR: La lista de alumnos está VACÍA.");
     }
 
     // Pausa
@@ -1174,6 +1205,26 @@ public final class App {
     }
     // Mensaje Informativo
     UtilesEntrada.hacerPausa("Filtro por alumno BAJA establecido");
+  }
+
+  private void activarFiltroEnTramite() {
+    System.out.println("Activación Filtro EN_TRAMITE");
+    System.out.println("============================");
+
+    // Registrar Filtro
+    criFil = Criterio.EN_TRAMITE;
+
+    // Vaciar Filtro
+    FILTRO.clear();
+
+    // Filtrado de Datos
+    for (Matricula mat : ALUMLIST) {
+      if (mat.getEstadoAlumn().equals(EstadoAlumn.EN_TRAMITE)) {
+        FILTRO.add(mat);
+      }
+    }
+    // Mensaje Informativo
+    UtilesEntrada.hacerPausa("Filtro por alumno EN_TRAMITE establecido");
   }
 
   // Menú Entrada / Salida

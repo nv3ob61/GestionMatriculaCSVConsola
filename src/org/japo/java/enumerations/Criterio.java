@@ -31,7 +31,8 @@ public enum Criterio {
   LOCALIDAD("localidad"),
   //ESTADO ALUMNOS
   ACTIVO("activo"),
-  BAJA("baja");
+  BAJA("baja"),
+  EN_TRAMITE("en_tramite");
   private final String nombre;
 
   // Constructor Privado
