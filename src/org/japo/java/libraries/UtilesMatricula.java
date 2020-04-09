@@ -154,7 +154,7 @@ public class UtilesMatricula {
     boolean isOk = false;
     if(d != null){
       if (d.after(UtilesFecha.fechaMin())
-              && d.before(UtilesFecha.fechaMin())) {
+              && d.before(UtilesFecha.fechaMax())) {
         isOk = true;
       }
     }
